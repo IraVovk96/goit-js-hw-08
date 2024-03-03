@@ -65,7 +65,7 @@ const images = [
 ];
 const galleryContainer = document.querySelector(".gallery");
 
-images.forEach(({ preview, original, description }) => {
+const galleryItems = images.map(({ preview, original, description }) => {
     const galleryItem = document.createElement("li");
     galleryItem.classList.add("gallery-item");
 
@@ -79,19 +79,20 @@ images.forEach(({ preview, original, description }) => {
     galleryImg.dataset.source = original;
     galleryImg.alt = description;
 
-
+    galleryLink.appendChild(galleryImg);
     galleryItem.appendChild(galleryLink);
-    galleryItem.appendChild(galleryImg);
-    galleryContainer.appendChild(galleryItem);
-
     return galleryItem;
 });
 
-document.body.appendChild(galleryItem);
+galleryItems.forEach(galleryItem => {
+    galleryContainer.appendChild(galleryItem);
+});
 
-const galleryLinks = document.querySelectorAll(".gallery-link");
-galleryLinks.forEach(link => {
-    link.addEventListener("click", event => {
-        event.preventDefault();
-    });
+galleryContainer.addEventListener('click', function(event) {
+    event.preventDefault();
+    if (event.target.tagName === 'IMG') {
+        const largeImageSource = event.target.dataset.source;
+        const lightbox = basicLightbox.create(`<img src="${largeImageSource}">`);
+        lightbox.show();
+    }
 });
